@@ -1,3 +1,6 @@
+/* Mecnum drive mechanism for Teleop one, this takes the input(controllers)
+and then outputs(power to motors)
+*/
 package org.firstinspires.ftc.teamcode.mechanisms;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
