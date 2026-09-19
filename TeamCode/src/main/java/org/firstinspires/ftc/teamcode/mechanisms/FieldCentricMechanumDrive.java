@@ -46,28 +46,18 @@ public class FieldCentricMechanumDrive {
 
         double SpeedMultiplier = 0.75;
 
-        double heading = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-        double adjustedstrafe = -drive * Math.sin(heading) + strafe * Math.cos(heading);
+        double max = Math.max(Math.abs(drive)+Math.abs(turn), 1);
 
-        double adjusteddrive = drive * Math.cos(heading) + strafe * Math.sin(heading);
+        double adjusted_strafe = -drive * Math.sin(heading) + strafe * Math.cos(heading);
 
-        double flPower = (adjusteddrive - adjustedstrafe - turn) * SpeedMultiplier;
-        double frPower = (adjusteddrive + adjustedstrafe + turn) * SpeedMultiplier;
-        double blPower = (adjusteddrive + adjustedstrafe - turn) * SpeedMultiplier;
-        double brPower = (adjusteddrive - adjustedstrafe + turn) * SpeedMultiplier;
+        double adjusted_drive = drive * Math.cos(heading) + strafe * Math.sin(heading);
 
-        // Normalize the values so no wheel power exceeds 100%
-        double max = Math.max(Math.abs(flPower), Math.abs(frPower));
-        max = Math.max(max, Math.abs(blPower));
-        max = Math.max(max, Math.abs(brPower));
-
-        if (max > 1.0) {
-            flPower /= max;
-            frPower /= max;
-            blPower /= max;
-            brPower /= max;
-        }
+        double flPower = (adjusted_drive - adjusted_strafe - turn/max) * SpeedMultiplier;
+        double frPower = (adjusted_drive + adjusted_strafe + turn/max) * SpeedMultiplier;
+        double blPower = (adjusted_drive + adjusted_strafe - turn/max) * SpeedMultiplier;
+        double brPower = (adjusted_drive - adjusted_strafe + turn/max) * SpeedMultiplier;
 
         frontLeft.setPower(flPower);
         frontRight.setPower(frPower);
