@@ -21,6 +21,7 @@ public class Intake {
 
 
 
+
     } public void stopIntake() {
         intake.setPower(0.0);
     }
